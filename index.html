@@ -1,8 +1,574 @@
-<html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💍 소중한 당신에게</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-<header>
-</header>
+    :root {
+      --cream: #fdf6ee;
+      --warm: #f5e6d3;
+      --rose: #c9747a;
+      --rose-light: #e8a0a6;
+      --gold: #b8860b;
+      --gold-light: #d4a843;
+      --brown: #6b4c3b;
+      --text: #3d2b1f;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      font-family: 'Gowun Batang', serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── 배경 패턴 ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(201,116,122,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(184,134,11,0.06) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9747a' fill-opacity='0.04'%3E%3Cpath d='M30 5 C20 5 10 15 10 25 C10 35 30 50 30 50 C30 50 50 35 50 25 C50 15 40 5 30 5Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── 페이지 들어올 때 fade ── */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 120px;
+      animation: fadeUp 1.2s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 헤더 장식 ── */
+    .header-deco {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .header-deco .ring-icon {
+      font-size: 2.8rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    .header-deco h1 {
+      font-family: 'Nanum Myeongjo', serif;
+      font-weight: 800;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      color: var(--brown);
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px auto;
+      max-width: 320px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+    }
+    .divider span { color: var(--gold); font-size: 1rem; }
+
+    /* ── 편지 카드 ── */
+    .letter-card {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(201,116,122,0.18);
+      border-radius: 20px;
+      padding: 44px 40px;
+      box-shadow:
+        0 4px 24px rgba(107,76,59,0.08),
+        0 1px 0 rgba(255,255,255,0.9) inset;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 1.4s ease both;
+    }
+    .letter-card::before {
+      content: '"';
+      position: absolute;
+      top: 10px; left: 20px;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 8rem;
+      color: var(--rose-light);
+      opacity: 0.25;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .letter-greeting {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.1rem;
+      color: var(--rose);
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+    .letter-body {
+      font-size: 1.05rem;
+      line-height: 2.1;
+      color: var(--text);
+      word-break: keep-all;
+    }
+    .letter-body p { margin-bottom: 20px; }
+    .letter-sign {
+      text-align: right;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.05rem;
+      color: var(--brown);
+      margin-top: 32px;
+      font-weight: 700;
+    }
+
+    /* ── 사진 갤러리 ── */
+    .photo-section {
+      margin-top: 48px;
+      animation: fadeUp 1.6s ease both;
+    }
+    .section-title {
+      text-align: center;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.1rem;
+      color: var(--brown);
+      margin-bottom: 24px;
+      letter-spacing: 0.06em;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    /* 전체 너비 강조 사진 */
+    .photo-grid .photo-item:nth-child(1)  { grid-column: 1 / -1; }
+    .photo-grid .photo-item:nth-child(10) { grid-column: 1 / -1; }
+    .photo-grid .photo-item:nth-child(20) { grid-column: 1 / -1; }
+    .photo-grid .photo-item:nth-child(30) { grid-column: 1 / -1; }
+    /* 2칸 너비 강조 사진 */
+    .photo-grid .photo-item:nth-child(5)  { grid-column: span 2; }
+    .photo-grid .photo-item:nth-child(15) { grid-column: span 2; }
+    .photo-grid .photo-item:nth-child(25) { grid-column: span 2; }
+    .photo-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--warm);
+      border: 1px solid rgba(201,116,122,0.15);
+      box-shadow: 0 4px 16px rgba(107,76,59,0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .photo-item:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 32px rgba(107,76,59,0.15);
+    }
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 16/10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--rose);
+      font-size: 0.85rem;
+      background: linear-gradient(135deg, #fdf0ee, #f9e4dc);
+    }
+    .photo-placeholder .photo-icon { font-size: 2.4rem; opacity: 0.6; }
+    .photo-caption {
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      color: var(--brown);
+      text-align: center;
+      background: rgba(255,255,255,0.7);
+    }
+
+    /* ── 청혼 섹션 ── */
+    .proposal-section {
+      margin-top: 60px;
+      text-align: center;
+      animation: fadeUp 1.8s ease both;
+    }
+    .proposal-quote {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      color: var(--brown);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      font-weight: 700;
+    }
+    .proposal-quote em {
+      color: var(--rose);
+      font-style: normal;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 16px 44px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn:hover::after { opacity: 1; }
+
+    .btn-yes {
+      background: linear-gradient(135deg, var(--rose), #a85560);
+      color: #fff;
+      box-shadow: 0 6px 24px rgba(201,116,122,0.4);
+      letter-spacing: 0.05em;
+    }
+    .btn-yes:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 12px 32px rgba(201,116,122,0.5);
+    }
+    .btn-no {
+      background: transparent;
+      color: var(--rose);
+      border: 2px solid var(--rose-light);
+      transition: all 0.3s ease;
+    }
+    .btn-no:hover {
+      background: var(--warm);
+    }
+
+    /* ── 수락 후 메시지 ── */
+    .accepted-msg {
+      display: none;
+      margin-top: 40px;
+      padding: 32px;
+      background: linear-gradient(135deg, rgba(201,116,122,0.1), rgba(184,134,11,0.08));
+      border-radius: 20px;
+      border: 1px solid rgba(201,116,122,0.2);
+      animation: heartBeat 0.6s ease;
+    }
+    .accepted-msg.show { display: block; }
+    @keyframes heartBeat {
+      0%   { transform: scale(0.8); opacity: 0; }
+      60%  { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .accepted-msg .big-heart {
+      font-size: 3.5rem;
+      animation: float 2s ease-in-out infinite;
+      display: block;
+    }
+    .accepted-msg p {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.3rem;
+      color: var(--rose);
+      font-weight: 700;
+      margin-top: 16px;
+    }
+
+    /* ── 하트 파티클 ── */
+    .heart-particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.4rem;
+      animation: floatAway 2.5s ease forwards;
+      z-index: 999;
+    }
+    @keyframes floatAway {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-200px) scale(0.4) rotate(20deg); }
+    }
+
+    /* ── 음악 버튼 ── */
+    .music-btn {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), #a85560);
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 16px rgba(201,116,122,0.4);
+      transition: all 0.3s ease;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 24px rgba(201,116,122,0.5);
+    }
+    .music-btn.playing { animation: spin 4s linear infinite; }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ── 꽃잎 파티클 배경 ── */
+    .petal {
+      position: fixed;
+      top: -20px;
+      font-size: 1rem;
+      opacity: 0.6;
+      pointer-events: none;
+      animation: petalFall linear infinite;
+      z-index: 0;
+    }
+    @keyframes petalFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .letter-card { padding: 28px 22px; }
+      .btn { padding: 14px 30px; font-size: 1rem; }
+    }
+  </style>
+</head>
 <body>
-    
+
+<!-- 꽃잎들 -->
+<div class="petal" style="left:5%;  animation-duration:8s;  animation-delay:0s;   font-size:0.9rem;">🌸</div>
+<div class="petal" style="left:15%; animation-duration:11s; animation-delay:2s;   font-size:0.7rem;">🌺</div>
+<div class="petal" style="left:30%; animation-duration:9s;  animation-delay:1s;   font-size:1.1rem;">🌸</div>
+<div class="petal" style="left:50%; animation-duration:13s; animation-delay:3s;   font-size:0.8rem;">💮</div>
+<div class="petal" style="left:65%; animation-duration:10s; animation-delay:0.5s; font-size:0.9rem;">🌸</div>
+<div class="petal" style="left:80%; animation-duration:7s;  animation-delay:4s;   font-size:0.7rem;">🌺</div>
+<div class="petal" style="left:92%; animation-duration:12s; animation-delay:1.5s; font-size:1rem;">🌸</div>
+
+<div class="page-wrapper">
+
+  <!-- 헤더 -->
+  <div class="header-deco">
+    <div class="ring-icon">💍</div>
+    <h1>소중한 당신에게</h1>
+    <div class="divider"><span>✦</span></div>
+  </div>
+
+  <!-- 편지 -->
+  <div class="letter-card">
+    <div class="letter-greeting">사랑하는 ○○에게,</div>
+    <div class="letter-body">
+      <p>
+        처음 당신을 만났던 날을 아직도 기억해요.<br>
+        그날 이후로 제 하루하루가 달라졌어요.<br>
+        당신이 웃을 때마다 세상이 더 따뜻해지고,<br>
+        당신 목소리를 들을 때마다 마음이 편안해져요.
+      </p>
+      <p>
+        함께 걷던 골목길도, 아무 말 없이 나란히 앉아 있던 순간도,<br>
+        모두 제 가슴 속 가장 소중한 기억이 되었어요.<br>
+        당신과 함께라면 평범한 하루도 특별해지거든요.
+      </p>
+      <p>
+        앞으로도 당신의 기쁨이 될게요.<br>
+        힘든 날엔 옆에서 버텨주고,<br>
+        행복한 날엔 더 크게 웃어줄게요.<br>
+        그리고 매일 매일, 당신을 사랑한다고 말해줄게요.
+      </p>
+    </div>
+    <div class="letter-sign">
+      당신을 사랑하는 ○○ 올림 💕
+    </div>
+  </div>
+
+  <!-- 사진 갤러리 -->
+  <div class="photo-section">
+    <div class="section-title">✦ 우리의 소중한 순간들 ✦</div>
+    <div class="photo-grid">
+
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">📷</span><span>사진 1</span></div><div class="photo-caption">처음 만난 날 ☁️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌅</span><span>사진 2</span></div><div class="photo-caption">우리의 첫 데이트 🍽️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌸</span><span>사진 3</span></div><div class="photo-caption">봄날의 산책 🌿</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌊</span><span>사진 4</span></div><div class="photo-caption">여름 여행 🏖️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🍂</span><span>사진 5</span></div><div class="photo-caption">가을 단풍길 🍁</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">☕</span><span>사진 6</span></div><div class="photo-caption">함께한 카페 ☕</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎉</span><span>사진 7</span></div><div class="photo-caption">생일 파티 🎂</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">❄️</span><span>사진 8</span></div><div class="photo-caption">겨울 데이트 ⛄</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎬</span><span>사진 9</span></div><div class="photo-caption">영화 보던 날 🍿</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌙</span><span>사진 10</span></div><div class="photo-caption">야경 드라이브 🚗</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🏔️</span><span>사진 11</span></div><div class="photo-caption">등산하던 날 🥾</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎵</span><span>사진 12</span></div><div class="photo-caption">콘서트 🎤</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">✈️</span><span>사진 13</span></div><div class="photo-caption">우리의 여행 ✈️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌺</span><span>사진 14</span></div><div class="photo-caption">꽃구경 🌷</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">💑</span><span>사진 15</span></div><div class="photo-caption">우리 둘 💕</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎠</span><span>사진 16</span></div><div class="photo-caption">놀이공원 🎡</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🍜</span><span>사진 17</span></div><div class="photo-caption">맛집 탐방 🍣</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌃</span><span>사진 18</span></div><div class="photo-caption">야경 데이트 🌆</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎨</span><span>사진 19</span></div><div class="photo-caption">전시회 관람 🖼️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌻</span><span>사진 20</span></div><div class="photo-caption">해바라기 밭 🌼</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎿</span><span>사진 21</span></div><div class="photo-caption">겨울 스키 ⛷️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌴</span><span>사진 22</span></div><div class="photo-caption">바다 여행 🐚</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎃</span><span>사진 23</span></div><div class="photo-caption">핼러윈 파티 🎭</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌅</span><span>사진 24</span></div><div class="photo-caption">일출 보던 날 🌄</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🐾</span><span>사진 25</span></div><div class="photo-caption">동물원 나들이 🦁</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🎆</span><span>사진 26</span></div><div class="photo-caption">불꽃놀이 🎇</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">☔</span><span>사진 27</span></div><div class="photo-caption">비 오던 날 🌧️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🍰</span><span>사진 28</span></div><div class="photo-caption">기념일 케이크 🕯️</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">🌠</span><span>사진 29</span></div><div class="photo-caption">별 보던 밤 🔭</div></div>
+      <div class="photo-item"><div class="photo-placeholder"><span class="photo-icon">💍</span><span>사진 30</span></div><div class="photo-caption">이 순간을 영원히 💕</div></div>
+
+    </div>
+  </div>
+
+  <!-- 청혼 -->
+  <div class="proposal-section">
+    <div class="divider" style="margin:0 auto 40px;"><span>💍</span></div>
+    <div class="proposal-quote">
+      나와 함께<br>
+      <em>평생을 함께</em> 해줄 수 있나요?
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-yes" onclick="onAccept()">💍 네, 좋아요!</button>
+      <button class="btn btn-no" id="noBtn" onclick="onDecline()">잠깐만요 🥺</button>
+    </div>
+
+    <div class="accepted-msg" id="acceptedMsg">
+      <span class="big-heart">💑</span>
+      <p>사랑해요 ❤️<br>평생 행복하게 해줄게요!</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 음악 버튼 -->
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="배경음악">🎵</button>
+
+<!-- 배경음악 (Web Audio API로 자동 생성되는 피아노 멜로디) -->
+<script>
+  /* ── 배경음악: Web Audio API 피아노 아르페지오 ── */
+  let audioCtx = null;
+  let musicPlaying = false;
+  let musicInterval = null;
+
+  const notes = [
+    261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25,
+    392.00, 349.23, 329.63, 293.66
+  ];
+  let noteIdx = 0;
+
+  function playNote(freq, time, duration, ctx) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, time);
+    gain.gain.setValueAtTime(0, time);
+    gain.gain.linearRampToValueAtTime(0.08, time + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+    osc.start(time);
+    osc.stop(time + duration + 0.1);
+  }
+
+  function startMusic() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let t = audioCtx.currentTime;
+    function scheduleNotes() {
+      for (let i = 0; i < 6; i++) {
+        const freq = notes[(noteIdx + i) % notes.length];
+        playNote(freq * 0.5, t + i * 0.38, 0.9, audioCtx);
+        playNote(freq, t + i * 0.38 + 0.1, 0.7, audioCtx);
+      }
+      noteIdx = (noteIdx + 6) % notes.length;
+      t += 6 * 0.38;
+    }
+    scheduleNotes();
+    musicInterval = setInterval(scheduleNotes, 6 * 380);
+    musicPlaying = true;
+    document.getElementById('musicBtn').classList.add('playing');
+    document.getElementById('musicBtn').textContent = '🎶';
+  }
+
+  function stopMusic() {
+    clearInterval(musicInterval);
+    if (audioCtx) audioCtx.close();
+    audioCtx = null;
+    musicPlaying = false;
+    document.getElementById('musicBtn').classList.remove('playing');
+    document.getElementById('musicBtn').textContent = '🎵';
+  }
+
+  function toggleMusic() {
+    if (musicPlaying) stopMusic();
+    else startMusic();
+  }
+
+  /* 페이지 첫 클릭 시 자동 재생 */
+  document.addEventListener('click', function autoPlay() {
+    if (!musicPlaying) startMusic();
+    document.removeEventListener('click', autoPlay);
+  }, { once: true });
+
+  /* ── 청혼 버튼 ── */
+  let noCount = 0;
+  const noMessages = ['잠깐만요 🥺', '한 번만 더 생각해요 💭', '부탁해요 🙏', '제발요 😢', '저만 봐줘요 💕'];
+
+  function onAccept() {
+    document.querySelector('.btn-group').style.display = 'none';
+    document.getElementById('acceptedMsg').classList.add('show');
+    spawnHearts();
+  }
+
+  function onDecline() {
+    noCount++;
+    const btn = document.getElementById('noBtn');
+    btn.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
+    /* 버튼이 슬슬 도망감 */
+    const x = (Math.random() - 0.5) * 200;
+    const y = (Math.random() - 0.5) * 100;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+    setTimeout(() => { btn.style.transform = ''; }, 600);
+  }
+
+  function spawnHearts() {
+    const emojis = ['❤️','💕','💖','💗','💝','✨','🌸'];
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'heart-particle';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = (60 + Math.random() * 30) + 'vh';
+        el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
+      }, i * 80);
+    }
+  }
+</script>
 </body>
 </html>
