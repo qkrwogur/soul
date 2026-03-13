@@ -465,8 +465,6 @@
 
 </div>
 
-<!-- 음악 버튼 -->
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="배경음악">🎵</button>
 
 <!-- 배경음악 (Web Audio API로 자동 생성되는 피아노 멜로디) -->
 <script>
@@ -493,39 +491,6 @@
     gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
     osc.start(time);
     osc.stop(time + duration + 0.1);
-  }
-
-  function startMusic() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let t = audioCtx.currentTime;
-    function scheduleNotes() {
-      for (let i = 0; i < 6; i++) {
-        const freq = notes[(noteIdx + i) % notes.length];
-        playNote(freq * 0.5, t + i * 0.38, 0.9, audioCtx);
-        playNote(freq, t + i * 0.38 + 0.1, 0.7, audioCtx);
-      }
-      noteIdx = (noteIdx + 6) % notes.length;
-      t += 6 * 0.38;
-    }
-    scheduleNotes();
-    musicInterval = setInterval(scheduleNotes, 6 * 380);
-    musicPlaying = true;
-    document.getElementById('musicBtn').classList.add('playing');
-    document.getElementById('musicBtn').textContent = '🎶';
-  }
-
-  function stopMusic() {
-    clearInterval(musicInterval);
-    if (audioCtx) audioCtx.close();
-    audioCtx = null;
-    musicPlaying = false;
-    document.getElementById('musicBtn').classList.remove('playing');
-    document.getElementById('musicBtn').textContent = '🎵';
-  }
-
-  function toggleMusic() {
-    if (musicPlaying) stopMusic();
-    else startMusic();
   }
 
   /* 페이지 첫 클릭 시 자동 재생 */
